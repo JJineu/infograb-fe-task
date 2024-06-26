@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import '@/styles/globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Infograb survey form',
+  title: 'InfoGrab survey form',
   description: 'This is a survey on MBTI, psychological test, and simple quiz',
 };
 
@@ -14,8 +15,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
-      <body className={inter.className}>{children}</body>
+    <html lang='ko'>
+      <head>
+        <meta charSet='utf-8' />
+        <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=0' />
+        <meta name='theme-color' content='#148756' />
+      </head>
+      <body className={`${inter.className} bg-green-50`}>{children}</body>
     </html>
   );
 }
