@@ -1,24 +1,49 @@
-import { useFunnel } from '@/components/funnel/useFunnel';
+import { useFunnel } from '@/components/funnel';
+import { useProgress, ProgressBar } from '@/components/progress';
 import { MultipleChoice, MultipleChoices, ShortAnswer } from '@/components/question';
-import React from 'react';
+import React, { Fragment } from 'react';
 
-const steps = ['1번 문제', '2번 문제', '3번 문제'];
+const QUESTION_STEPS = ['1번 문제', '2번 문제', '3번 문제'];
 
 const QuestionsPage = () => {
-  const { Funnel, Step, setStep } = useFunnel(steps[0]);
+  const { Funnel, Step, setStep } = useFunnel(QUESTION_STEPS[0]);
+  const { currentStep, setCurrentStep, progress } = useProgress(QUESTION_STEPS);
+
+  const goToNextStep = () => {
+    const nextIndex = Math.min(QUESTION_STEPS.indexOf(currentStep) + 1, QUESTION_STEPS.length - 1);
+    const nextStep = QUESTION_STEPS[nextIndex];
+    setStep(nextStep);
+    setCurrentStep(nextStep);
+  };
+
+  const goToPrevStep = () => {
+    const prevIndex = Math.max(QUESTION_STEPS.indexOf(currentStep) - 1, 0);
+    const prevStep = QUESTION_STEPS[prevIndex];
+    setStep(prevStep);
+    setCurrentStep(prevStep);
+  };
+
+  const goToStep = (index: number) => {
+    const targetStep = QUESTION_STEPS[index];
+    setStep(targetStep);
+    setCurrentStep(targetStep);
+  };
 
   return (
-    <Funnel>
-      <Step name='1번 문제'>
-        <MultipleChoice />
-      </Step>
-      <Step name='2번 문제'>
-        <ShortAnswer />
-      </Step>
-      <Step name='3번 문제'>
-        <MultipleChoices />
-      </Step>
-    </Funnel>
+    <Fragment>
+      <ProgressBar progress={progress} step={QUESTION_STEPS} onClick={goToStep} />
+      <Funnel>
+        <Step name={QUESTION_STEPS[0]}>
+          <MultipleChoice onNext={goToNextStep} onPrev={goToPrevStep} />
+        </Step>
+        <Step name={QUESTION_STEPS[1]}>
+          <ShortAnswer onNext={goToNextStep} onPrev={goToPrevStep} />
+        </Step>
+        <Step name={QUESTION_STEPS[2]}>
+          <MultipleChoices onNext={goToNextStep} onPrev={goToPrevStep} />
+        </Step>
+      </Funnel>
+    </Fragment>
   );
 };
 
