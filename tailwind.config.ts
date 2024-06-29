@@ -1,13 +1,9 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss';
 
-const colors = require("tailwindcss/colors");
+const colors = require('tailwindcss/colors');
 
 const config: Config = {
-  content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+  content: ['./components/**/*.{js,ts,jsx,tsx,mdx}', './app/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     fontFamily: {},
     container: {
@@ -15,16 +11,16 @@ const config: Config = {
     },
     extend: {
       fontSize: {
-        sm: "0.8125rem", // 13px
-        base: "0.875rem", // 14px
-        15: "0.9375rem", // 15px
-        16: "1rem", // 16px
-        "vertical-menu-item-font-size": "0.875rem",
+        sm: '0.8125rem', // 13px
+        base: '0.875rem', // 14px
+        15: '0.9375rem', // 15px
+        16: '1rem', // 16px
+        'vertical-menu-item-font-size': '0.875rem',
       },
       colors: {
         body: colors.slate[800],
-        "body-bg": colors.slate[100],
-        "body-bordered": colors.white,
+        'body-bg': colors.green[50],
+        'body-bordered': colors.white,
 
         custom: {
           50: colors.blue[50],
@@ -53,17 +49,18 @@ const config: Config = {
           950: colors.red[950],
         },
         green: {
-          50: "#EAFAF7",
-          100: "#D2F4EE",
-          200: "#A0E8DB",
-          300: "#56D7BF",
-          400: "#2DBDA3",
-          500: "#249782",
-          600: "#208875",
-          700: "#1C7767",
-          800: "#186355",
-          900: "#11463C",
-          950: "#0B2D27",
+          50: '#EAFAF7',
+          100: '#D2F4EE',
+          200: '#A0E8DB',
+          300: '#56D7BF',
+          400: '#2DBDA3',
+          500: '#249782',
+          600: '#208875',
+          650: '#148756',
+          700: '#1C7767',
+          800: '#186355',
+          900: '#11463C',
+          950: '#0B2D27',
         },
         yellow: {
           50: colors.yellow[50],
@@ -78,7 +75,6 @@ const config: Config = {
           900: colors.yellow[900],
           950: colors.yellow[950],
         },
-
         orange: {
           50: colors.orange[50],
           100: colors.orange[100],
@@ -119,45 +115,45 @@ const config: Config = {
           950: colors.purple[950],
         },
         zink: {
-          50: "#E2EAF3",
-          100: "#C8D7E9",
-          200: "#92AFD3",
-          300: "#5885BC",
-          400: "#395F8E",
-          500: "#233A57",
-          600: "#1C2E45",
-          700: "#132337",
-          800: "#0F1824",
-          900: "#070C12",
-          950: "#030507",
+          50: '#E2EAF3',
+          100: '#C8D7E9',
+          200: '#92AFD3',
+          300: '#5885BC',
+          400: '#395F8E',
+          500: '#233A57',
+          600: '#1C2E45',
+          700: '#132337',
+          800: '#0F1824',
+          900: '#070C12',
+          950: '#030507',
         },
       },
       maxWidth: {
-        boxed: "87.5rem", // 1400px
+        boxed: '87.5rem', // 1400px
       },
       minHeight: {
-        sm: "1650px", // 1650px
+        sm: '1650px', // 1650px
       },
       backgroundImage: {},
       animation: {
-        icons: "iconsAnimation 50s",
-        progress: "progressAnimation 2s",
+        icons: 'iconsAnimation 50s',
+        progress: 'progressAnimation 2s',
       },
       keyframes: {
         iconsAnimation: {
-          to: { strokeDashoffset: "500" },
+          to: { strokeDashoffset: '500' },
         },
         progressAnimation: {
-          "0%": {
-            width: "0",
+          '0%': {
+            width: '0',
           },
         },
       },
       aspectRatio: {
-        "1/1": "1 / 1",
-        "4/3": "4 / 3",
-        "16/9": "16 / 9",
-        "21/9": "21 / 9",
+        '1/1': '1 / 1',
+        '4/3': '4 / 3',
+        '16/9': '16 / 9',
+        '21/9': '21 / 9',
       },
     },
   },
