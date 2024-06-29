@@ -1,6 +1,9 @@
+import '@/styles/globals.css';
+
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import '@/styles/globals.css';
+
+import { Footer, Header } from '@/components/layout';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,7 +24,11 @@ export default function RootLayout({
         <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=0' />
         <meta name='theme-color' content='#148756' />
       </head>
-      <body className={`${inter.className} bg-green-50`}>{children}</body>
+      <body className={`${inter.className} bg-green-50`}>
+        <Header />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }
