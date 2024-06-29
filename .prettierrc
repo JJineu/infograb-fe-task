@@ -8,5 +8,5 @@
   "singleQuote": true,
   "htmlWhitespaceSensitivity": "css",
   "jsxSingleQuote": true,
-  "endOfLine": "lf"
+  "endOfLine": "auto"
 }
