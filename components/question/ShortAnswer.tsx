@@ -10,11 +10,7 @@ const ShortAnswer = ({ value, setValue }: { value: number; setValue: (value: num
     setValue(Number(e.target.value));
   };
 
-  return (
-    <div>
-      <input type='number' step={1} value={value} onChange={handleSetValue} />
-    </div>
-  );
+  return <input className='input-default my-1' type='number' step={1} value={value} onChange={handleSetValue} />;
 };
 
 export default ShortAnswer;

@@ -1,7 +1,7 @@
 import React from 'react';
 
 const QuestionTitle = ({ title }: { title: string }) => {
-  return <div>{title}</div>;
+  return <h4>{title}</h4>;
 };
 
 export default QuestionTitle;
