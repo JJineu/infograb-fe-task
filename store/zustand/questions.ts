@@ -32,22 +32,7 @@ interface Actions {
 
 export const useAnswersStore = create<State & Actions>()(
   immer((set) => ({
-    answers: {
-      titleId: {
-        type: 'MULTIPLE_CHOICE',
-        sum: 0,
-        selectedIds: [],
-      },
-      titleId2: {
-        type: 'SHORT_ANSWER',
-        sum: 0,
-      },
-      titleId3: {
-        type: 'MULTIPLE_CHOICES',
-        sum: 0,
-        selectedIds: [],
-      },
-    },
+    answers: {},
     setAnswer: (answer: RequestAnswer) =>
       set((state) => {
         const { titleId, ...rest } = answer;
@@ -58,10 +43,10 @@ export const useAnswersStore = create<State & Actions>()(
       }),
     setChoiceAnswer: (answer: RequestChoiceAnswer) =>
       set((state) => {
-        const { titleId, selectedId, ...rest } = answer;
+        const { titleId, selectedId, type } = answer;
         if (!state.answers[titleId]) {
           state.answers[titleId] = {
-            type: rest.type,
+            type,
             sum: selectedId.value,
             selectedIds: [selectedId],
           };
@@ -71,6 +56,11 @@ export const useAnswersStore = create<State & Actions>()(
             state.answers[titleId].sum -= selectedId.value;
             state.answers[titleId].selectedIds = state.answers[titleId].selectedIds?.filter(({ id }) => id !== selectedId.id);
           } else {
+            if (type === 'MULTIPLE_CHOICE') {
+              state.answers[titleId].sum = selectedId.value;
+              state.answers[titleId].selectedIds = [selectedId];
+              return;
+            }
             state.answers[titleId].sum += selectedId.value;
             state.answers[titleId].selectedIds?.push(selectedId);
           }
