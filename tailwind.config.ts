@@ -1,6 +1,9 @@
 import type { Config } from 'tailwindcss';
 
 const colors = require('tailwindcss/colors');
+const heading = require('./plugins/headings.js');
+const buttons = require('./plugins/buttons.js');
+const forms = require('./plugins/forms.js');
 
 const config: Config = {
   content: ['./components/**/*.{js,ts,jsx,tsx,mdx}', './app/**/*.{js,ts,jsx,tsx,mdx}'],
@@ -157,6 +160,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [heading, buttons, forms],
 };
 export default config;
