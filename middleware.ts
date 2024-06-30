@@ -1,10 +1,12 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
+import { HOME } from './constants/route-helper';
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname === '/') {
+  if (pathname === HOME) {
     return NextResponse.next();
   }
 
@@ -12,7 +14,7 @@ export function middleware(request: NextRequest) {
   const userTeam = request.cookies.get('user_team');
 
   if (!userName || !userTeam) {
-    return NextResponse.redirect(new URL('/', request.url));
+    return NextResponse.redirect(new URL(HOME, request.url));
   }
 
   return NextResponse.next();
