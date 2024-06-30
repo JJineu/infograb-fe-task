@@ -13,6 +13,9 @@
     "pre-commit": "lint-staged"
   },
   "dependencies": {
+    "@nivo/bar": "^0.87.0",
+    "@nivo/boxplot": "^0.87.0",
+    "@nivo/core": "^0.87.0",
     "immer": "^10.1.1",
     "next": "14.2.4",
     "react": "^18",
