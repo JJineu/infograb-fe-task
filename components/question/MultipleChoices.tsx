@@ -1,13 +1,31 @@
 import React from 'react';
-import QuestionTitle from './QuestionTitle';
+
 import AnswerChoice from './AnswerChoice';
 
-const MultipleChoices = ({ answerCount = 5 }) => {
+const MultipleChoices = ({
+  choices = [],
+  selectedValue = [],
+  setSelectedValue,
+}: {
+  choices: { id: string; value: number; content: string }[];
+  selectedValue: { id: string; value: number }[];
+  setSelectedValue: ({ id, value }: { id: string; value: number }) => void;
+}) => {
   return (
     <div>
-      <QuestionTitle title='What is your favorite color?' />
-      {Array.from({ length: answerCount }).map((_, index) => (
-        <AnswerChoice index={index} key={index} content='Red' />
+      {choices.map((choice, index) => (
+        <AnswerChoice
+          key={choice.id}
+          index={index + 1}
+          {...choice}
+          isSelected={selectedValue.some((selected) => selected.id === choice.id)}
+          selectValue={() =>
+            setSelectedValue({
+              id: choice.id,
+              value: choice.value,
+            })
+          }
+        />
       ))}
     </div>
   );

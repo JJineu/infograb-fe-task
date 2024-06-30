@@ -1,9 +1,11 @@
 import React from 'react';
 
-const AnswerChoice = ({ index, content }) => {
+import { pressEnter } from '@/utils/html';
+
+const AnswerChoice = ({ index, content, isSelected, selectValue }: { index: number; content: string; isSelected: boolean; selectValue: () => void }) => {
   return (
-    <div key={`${index}-${content}`}>
-      <span>{index + 1}. </span>
+    <div className={`cursor-pointer ${isSelected && ''}`} onClick={selectValue} onKeyDown={(e) => pressEnter(e, selectValue)} role='button' tabIndex={0}>
+      <span>{index}. </span>
       <span>{content}</span>
     </div>
   );
