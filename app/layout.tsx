@@ -24,9 +24,9 @@ export default function RootLayout({
         <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=0' />
         <meta name='theme-color' content='#148756' />
       </head>
-      <body className={`${inter.className} bg-body-bg`}>
+      <body className={`${inter.className} flex h-full min-h-screen w-screen flex-col bg-body-bg`}>
         <Header />
-        {children}
+        <main className='grow'>{children}</main>
         <Footer />
       </body>
     </html>
