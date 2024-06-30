@@ -28,6 +28,7 @@ interface State {
 interface Actions {
   setAnswer: (answer: RequestAnswer) => void;
   setChoiceAnswer: (answer: RequestChoiceAnswer) => void;
+  clearAnswers: () => void;
 }
 
 export const useAnswersStore = create<State & Actions>()(
@@ -65,6 +66,10 @@ export const useAnswersStore = create<State & Actions>()(
             state.answers[titleId].selectedIds?.push(selectedId);
           }
         }
+      }),
+    clearAnswers: () =>
+      set((state) => {
+        state.answers = {};
       }),
   })),
 );
