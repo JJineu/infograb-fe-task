@@ -2,7 +2,7 @@
 
 import { ResponsiveScatterPlot } from '@nivo/scatterplot';
 
-const ScatterPlotChart = ({ data }: { data: { id: string; data: { x: number; y: number }[] } }) => (
+const ScatterPlotChart = ({ data, axisX = 'score average', axisY = 'user count' }: { data: { id: string; data: { x: number; y: number }[] }; axisX?: string; axisY?: string }) => (
   <ResponsiveScatterPlot
     data={data}
     margin={{ top: 60, right: 140, bottom: 70, left: 90 }}
@@ -18,7 +18,7 @@ const ScatterPlotChart = ({ data }: { data: { id: string; data: { x: number; y: 
       tickSize: 5,
       tickPadding: 5,
       tickRotation: 0,
-      legend: 'weight',
+      legend: axisX,
       legendPosition: 'middle',
       legendOffset: 46,
       truncateTickAt: 0,
@@ -28,7 +28,7 @@ const ScatterPlotChart = ({ data }: { data: { id: string; data: { x: number; y: 
       tickSize: 5,
       tickPadding: 5,
       tickRotation: 0,
-      legend: 'size',
+      legend: axisY,
       legendPosition: 'middle',
       legendOffset: -60,
       truncateTickAt: 0,

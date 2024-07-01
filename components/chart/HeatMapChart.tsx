@@ -2,7 +2,30 @@
 
 import { ResponsiveHeatMap } from '@nivo/heatmap';
 
-const HeatMapChart = ({ data, maxValue }: { data: { id: string; data: { x: string; y: string; value: number }[] }[]; maxValue: number }) => (
+const HeatMapChart = ({
+  data,
+  maxValue,
+  annotation = [
+    {
+      type: 'rect',
+      match: {
+        id: '2.02',
+      },
+      note: '2번설문 scale2 선택수',
+      noteX: 100,
+      noteY: -180,
+      offset: 2,
+      noteTextOffset: 5,
+      borderRadius: 2,
+    },
+  ],
+  axiosY = 'question',
+}: {
+  data: { id: string; data: { x: string; y: string; value: number }[] }[];
+  maxValue: number;
+  annotation?: any[];
+  axiosY?: string;
+}) => (
   <ResponsiveHeatMap
     data={data}
     margin={{ top: 60, right: 90, bottom: 60, left: 90 }}
@@ -19,7 +42,7 @@ const HeatMapChart = ({ data, maxValue }: { data: { id: string; data: { x: strin
       tickSize: 5,
       tickPadding: 5,
       tickRotation: 0,
-      legend: 'question',
+      legend: axiosY,
       legendPosition: 'middle',
       legendOffset: 50,
       truncateTickAt: 0,
@@ -28,7 +51,7 @@ const HeatMapChart = ({ data, maxValue }: { data: { id: string; data: { x: strin
       tickSize: 5,
       tickPadding: 5,
       tickRotation: 0,
-      legend: 'question',
+      legend: axiosY,
       legendPosition: 'middle',
       legendOffset: -50,
       truncateTickAt: 0,
@@ -59,6 +82,7 @@ const HeatMapChart = ({ data, maxValue }: { data: { id: string; data: { x: strin
         titleOffset: 4,
       },
     ]}
+    annotations={annotation}
   />
 );
 
