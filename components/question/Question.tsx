@@ -7,18 +7,21 @@ import NavigationButtons from '../progress/NavigationButtons';
 import MultipleChoice from './MultipleChoice';
 import MultipleChoices from './MultipleChoices';
 import QuestionTitle from './QuestionTitle';
+import RatingScale from './RatingScale';
 import ShortAnswer from './ShortAnswer';
 
 export const QUESTION_TYPES: { [key: string]: string } = {
   SHORT_ANSWER: 'SHORT_ANSWER',
   MULTIPLE_CHOICE: 'MULTIPLE_CHOICE',
   MULTIPLE_CHOICES: 'MULTIPLE_CHOICES',
+  RATING_SCALE: 'RATING_SCALE',
 };
 
 const QUESTION_COMPONENTS: any = {
   [QUESTION_TYPES.MULTIPLE_CHOICES]: MultipleChoices,
   [QUESTION_TYPES.SHORT_ANSWER]: ShortAnswer,
   [QUESTION_TYPES.MULTIPLE_CHOICE]: MultipleChoice,
+  [QUESTION_TYPES.RATING_SCALE]: RatingScale,
 };
 
 export interface QuestionProps {
@@ -26,11 +29,6 @@ export interface QuestionProps {
   type: keyof typeof QUESTION_TYPES;
   choices?: { id: string; value: number; content: string }[];
 }
-
-// interface AnswerChoiceProps {
-//   choices: { id: string; value: number; content: string }[];
-//   setSelectedValue: (value: number) => void;
-// }
 
 const Question = ({ title, type, choices, onNext, onPrev }: QuestionProps & NavigationButtonsProps) => {
   const QuestionComponent = QUESTION_COMPONENTS[type];
