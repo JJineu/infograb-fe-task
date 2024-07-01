@@ -36,16 +36,16 @@ const setSurveyData = (team: string, data: { titleId: string; sum: number }[]) =
 };
 
 export const getSumResult = (): { xLabel: string; [key: string]: number }[] => {
-  const teams = getTeamNames();
+  const teamNames = getTeamNames();
   const titleIds = getTitleIds();
 
   const sumsByTitleId = titleIds.reduce((acc, titleId) => {
     acc[titleId] = { xLabel: titleId };
-    teams.forEach((team) => (acc[titleId][team] = 0));
+    teamNames.forEach((team) => (acc[titleId][team] = 0));
     return acc;
   }, {});
 
-  teams.forEach((team) => {
+  teamNames.forEach((team) => {
     const sumByTeam = getSumByTeam(team);
     sumByTeam.forEach(({ titleId, sum }) => {
       if (sumsByTitleId[titleId]) {
@@ -59,10 +59,6 @@ export const getSumResult = (): { xLabel: string; [key: string]: number }[] => {
 
 const getSumByTeam = (team: string): { titleId: string; sum: number }[] => {
   const data = getSurveyData(team);
-  //   const result = data.reduce((acc: { [key: string]: number }, curr: { titleId: string; sum: number }) => {
-  //     acc[curr.titleId] = (acc[curr.titleId] || 0) + curr.sum;
-  //     return acc;
-  //   }, {});
 
   const sumsByTitleId = data.reduce((acc: { [key: string]: number }, curr: { titleId: string; sum: number }) => {
     acc[curr.titleId] = (acc[curr.titleId] || 0) + curr.sum;
@@ -118,8 +114,6 @@ export const getSumAvgResult = (): { xLabel: string; [key: string]: number }[] =
   return Object.values(avgByTitleId);
 };
 
-const getTitleIds = () => ['1', '2', '3', 'total'];
-
 export const getQuestions = (): { data: QuestionProps[] } => {
   return {
     data: [
@@ -136,7 +130,7 @@ export const getQuestions = (): { data: QuestionProps[] } => {
       },
       {
         type: 'SHORT_ANSWER',
-        title: { id: '2', content: '맛집들에 대한 만족도를 숫자로 표현한다면?' },
+        title: { id: '2', content: '회사 근처 맛집에 대한 전반적인 만족도를 1에서 10 사이로 평가해주세요.' },
       },
       {
         type: 'MULTIPLE_CHOICES',
@@ -149,9 +143,15 @@ export const getQuestions = (): { data: QuestionProps[] } => {
           { id: '5', value: 5, content: '재방문 의사 - 이 맛집은 멀리서도 찾아올 정도로 오고 싶은 곳이에요' },
         ],
       },
+      {
+        type: 'RATING_SCALE',
+        title: { id: '4', content: '본인이 미식가라고 생각하는 정도를 1에서 10 사이로 평가해주세요.' },
+      },
     ],
   };
 };
+
+const getTitleIds = () => [...getQuestions().data.map((question) => question.title.id), 'total'];
 
 export const getStandardDeviationResult = (): { group: string; n: number; value: number }[] => {
   const teams = getTeams(); // Get teams information
@@ -179,42 +179,76 @@ export const getStandardDeviationResult = (): { group: string; n: number; value:
     const stdDeviation = Math.sqrt(value / n); // Calculate standard deviation
     return { group, n, value: stdDeviation };
   });
-
   return stdDeviationResult;
 };
 
-//   // 팀별 점수 분포 차트 데이터 준비
-//   const distributionData = {
-//     labels: Array.from({ length: 10 }, (_, i) => i + 1),
-//     datasets: teams.map((team, index) => ({
-//       label: team.name,
-//       data: team.scores,
-//       backgroundColor: `rgba(${index * 50}, ${100 + index * 50}, 192, 0.2)`,
-//       borderColor: `rgba(${index * 50}, ${100 + index * 50}, 192, 1)`,
-//       borderWidth: 1
-//     }))
-//   };
+export const getCorrelationResult = (): { id: string; data: { x: number; y: number }[] }[] => {
+  const teams = getTeams();
 
-//   // 상관관계 차트 데이터 준비 (예시 데이터가 부족하여 간단히 표현)
-//   const correlationData = {
-//     labels: ['1번 문제', '2번 문제', '3번 문제'],
-//     datasets: [{
-//       label: '상관관계',
-//       data: [1, 0.5, -0.2], // 상관관계 예시 값
-//       backgroundColor: 'rgba(153, 102, 255, 0.2)',
-//       borderColor: 'rgba(153, 102, 255, 1)',
-//       borderWidth: 1
-//     }]
-//   };
+  const correlationResult = teams.map((team) => {
+    const sumByTeam = getSumByTeam(team.name); // Get sum by team
+    const teamTotalAvg = sumByTeam.find((sum) => sum.titleId === 'total').sum / team.count;
+    return { id: team.name, data: [{ x: teamTotalAvg, y: team.count }] };
+  });
 
-//   // 팀별 퍼포먼스 트렌드 차트 데이터 준비 (예시 데이터가 부족하여 간단히 표현)
-//   const trendData = {
-//     labels: ['월', '화', '수', '목', '금'],
-//     datasets: teams.map((team, index) => ({
-//       label: team.name,
-//       data: team.scores, // 예시 데이터
-//       fill: false,
-//       borderColor: `rgba(${index * 50}, ${100 + index * 50}, 192, 1)`,
-//       tension: 0.1
-//     }))
-//   };
+  return correlationResult;
+};
+
+export const getHeatMapResult = async (): Promise<{ results: { id: string; data: { x: string; y: number }[] }[]; maxValue: number }> => {
+  let maxValue = 0;
+  let results = getTitleIds()
+    .filter((titleId) => titleId !== 'total') // Filter out 'total'
+    .map((titleId) => ({
+      id: titleId,
+      data: [
+        { x: '01', y: 0 },
+        { x: '02', y: 0 },
+        { x: '03', y: 0 },
+        { x: '04', y: 0 },
+        { x: '05', y: 0 },
+      ],
+    }));
+
+  const teamNames = getTeamNames();
+  await teamNames.forEach(async (team) => {
+    const data = await getSurveyData(team);
+    data.forEach(({ titleId, sum }) => {
+      const result = results.find((r) => r.id === titleId);
+      if (!result) return;
+
+      let index;
+      switch (titleId) {
+        case '1':
+          index = sum - 1;
+          break;
+        case '2':
+        case '4':
+          if (sum >= 1 && sum <= 2) index = 0;
+          else if (sum >= 3 && sum <= 4) index = 1;
+          else if (sum >= 5 && sum <= 6) index = 2;
+          else if (sum >= 7 && sum <= 8) index = 3;
+          else if (sum >= 9 && sum <= 10) index = 4;
+          break;
+        case '3':
+          if (sum >= 1 && sum <= 3) index = 0;
+          else if (sum >= 4 && sum <= 6) index = 1;
+          else if (sum >= 7 && sum <= 9) index = 2;
+          else if (sum >= 10 && sum <= 12) index = 3;
+          else if (sum >= 13 && sum <= 15) index = 4;
+          break;
+        default:
+          return;
+      }
+
+      if (index !== undefined) {
+        result.data[index].y += 1;
+        results = [...results.filter((r) => r.id !== titleId), result];
+        if (result.data[index].y > maxValue) {
+          maxValue = result.data[index].y;
+        }
+      }
+    });
+  });
+
+  return { results, maxValue };
+};
