@@ -1,11 +1,12 @@
 import React from 'react';
 
-const ProgressBar = ({ progress, steps, onClick }: { progress: number; steps: string[]; onClick: (index: number) => void }) => {
+const ProgressBar = ({ progress, steps = [], onClick }: { progress: number; steps: string[]; onClick: (index: number) => void }) => {
   const calculateProgress = (index: number, stepsLength: number) => progress > (index / stepsLength) * 100;
 
   return (
     <div className='relative flex h-10 justify-between'>
       <div className='absolute left-0 top-4 h-2 bg-blue-500 transition-all duration-200 ease-linear' style={{ width: `${progress}%` }} />
+      <div />
       {steps.map((step, index) => (
         <div
           key={step}

@@ -1,11 +1,21 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+import React from 'react';
+
 import { useFunnel } from '@/components/funnel';
-import { useProgress, ProgressBar } from '@/components/progress';
-import { MultipleChoice, MultipleChoices, ShortAnswer } from '@/components/question';
-import React, { Fragment } from 'react';
+import { ProgressBar, useProgress } from '@/components/progress';
+import type { NavigationButtonsProps } from '@/components/progress/NavigationButtons';
+import Question from '@/components/question/Question';
+import { DASHBOARD, HOME } from '@/constants/route-helper';
+import { getQuestions, postSurvey } from '@/data/services';
+import { useAnswersStore } from '@/store/zustand/questions';
+import { useUserStore } from '@/store/zustand/user';
 
 const QUESTION_STEPS = ['1번 문제', '2번 문제', '3번 문제'];
 
 const QuestionsPage = () => {
+  const router = useRouter();
   const { Funnel, Step, setStep } = useFunnel(QUESTION_STEPS[0]);
   const { currentStep, setCurrentStep, progress } = useProgress(QUESTION_STEPS);
 
@@ -29,21 +39,70 @@ const QuestionsPage = () => {
     setCurrentStep(targetStep);
   };
 
+  const { answers, clearAnswers } = useAnswersStore();
+  const { user } = useUserStore();
+
+  const onSubmit = async () => {
+    alert('설문이 완료되었습니다. 감사합니다.');
+    const answersArray = Object.keys(answers).map((key) => {
+      return {
+        titleId: key,
+        sum: answers[key].sum,
+      };
+    });
+
+    await postSurvey(user.team, answersArray);
+
+    clearAnswers();
+    router.push(DASHBOARD);
+    // try {
+    //   await fetch('/api/survey', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(answersArray),
+    //   });
+    // } catch (error) {
+    //   console.error('Error:', error);
+    // }
+  };
+
+  const navigateHandler: NavigationButtonsProps = {
+    onNext: goToNextStep,
+    onPrev: goToPrevStep,
+    disabled: false,
+  };
+
+  const navigateHandlerFirst: NavigationButtonsProps = {
+    onNext: goToNextStep,
+    onPrev: () => router.push(HOME),
+    disabled: true,
+  };
+
+  const navigateHandlerLast: NavigationButtonsProps = {
+    onNext: onSubmit,
+    onPrev: goToPrevStep,
+    disabled: false,
+  };
+
+  const { data } = getQuestions();
+
   return (
-    <Fragment>
-      <ProgressBar progress={progress} step={QUESTION_STEPS} onClick={goToStep} />
+    <div className='p-4'>
+      <ProgressBar progress={progress} steps={QUESTION_STEPS} onClick={goToStep} />
       <Funnel>
         <Step name={QUESTION_STEPS[0]}>
-          <MultipleChoice onNext={goToNextStep} onPrev={goToPrevStep} />
+          <Question {...data[0]} {...navigateHandlerFirst} />
         </Step>
         <Step name={QUESTION_STEPS[1]}>
-          <ShortAnswer onNext={goToNextStep} onPrev={goToPrevStep} />
+          <Question {...data[1]} {...navigateHandler} />
         </Step>
         <Step name={QUESTION_STEPS[2]}>
-          <MultipleChoices onNext={goToNextStep} onPrev={goToPrevStep} />
+          <Question {...data[2]} {...navigateHandlerLast} />
         </Step>
       </Funnel>
-    </Fragment>
+    </div>
   );
 };
 

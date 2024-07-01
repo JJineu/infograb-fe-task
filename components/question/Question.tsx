@@ -35,6 +35,7 @@ export interface QuestionProps {
 const Question = ({ title, type, choices, onNext, onPrev }: QuestionProps & NavigationButtonsProps) => {
   const QuestionComponent = QUESTION_COMPONENTS[type];
   const { setAnswer, setChoiceAnswer, answers } = useAnswersStore();
+  const disabledOnNext = !answers[title.id] || !answers[title.id].sum || (type === QUESTION_TYPES.MULTIPLE_CHOICE && !answers[title.id].selectedIds);
 
   return (
     <div>
@@ -46,7 +47,7 @@ const Question = ({ title, type, choices, onNext, onPrev }: QuestionProps & Navi
         setValue={(data: number) => setAnswer({ value: data, type, titleId: title.id })}
         setSelectedValue={(data: { id: string; value: number }) => setChoiceAnswer({ selectedId: data, titleId: title.id, type })}
       />
-      <NavigationButtons onNext={onNext} onPrev={onPrev} />
+      <NavigationButtons disabled={disabledOnNext} onNext={onNext} onPrev={onPrev} />
     </div>
   );
 };
