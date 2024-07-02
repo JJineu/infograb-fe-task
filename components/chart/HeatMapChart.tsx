@@ -11,7 +11,7 @@ const HeatMapChart = ({
       match: {
         id: '2.02',
       },
-      note: '2번설문 scale2 선택수',
+      note: '2번설문 scale02[3-4점] 선택수',
       noteX: 100,
       noteY: -180,
       offset: 2,
@@ -58,12 +58,14 @@ const HeatMapChart = ({
     }}
     colors={{
       type: 'diverging',
-      scheme: 'red_blue',
+      scheme: 'red_yellow_blue',
       divergeAt: 0.5,
       minValue: 0,
       maxValue,
     }}
     emptyColor='#555555'
+    opacity={0.8}
+    borderRadius={5}
     legends={[
       {
         anchor: 'bottom',

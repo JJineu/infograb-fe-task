@@ -14,8 +14,8 @@ const BoxPlotChart = ({
   <ResponsiveBoxPlot
     data={data}
     margin={{ top: 60, right: 140, bottom: 60, left: 60 }}
-    minValue={-5}
-    maxValue={30}
+    minValue='auto'
+    maxValue='auto'
     padding={0.12}
     subGroupBy='subgroup'
     enableGridX

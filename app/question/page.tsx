@@ -12,12 +12,16 @@ import { getQuestions, postSurvey } from '@/data/services';
 import { useAnswersStore } from '@/store/zustand/questions';
 import { useUserStore } from '@/store/zustand/user';
 
-const QUESTION_STEPS = ['1번 문제', '2번 문제', '3번 문제'];
-
 const QuestionsPage = () => {
   const router = useRouter();
+  const { data } = getQuestions();
+  const QUESTION_STEPS = data.map((question) => question.title.content);
+
   const { Funnel, Step, setStep } = useFunnel(QUESTION_STEPS[0]);
   const { currentStep, setCurrentStep, progress } = useProgress(QUESTION_STEPS);
+
+  const { answers, clearAnswers } = useAnswersStore();
+  const { user } = useUserStore();
 
   const goToNextStep = () => {
     const nextIndex = Math.min(QUESTION_STEPS.indexOf(currentStep) + 1, QUESTION_STEPS.length - 1);
@@ -39,33 +43,25 @@ const QuestionsPage = () => {
     setCurrentStep(targetStep);
   };
 
-  const { answers, clearAnswers } = useAnswersStore();
-  const { user } = useUserStore();
+  const goToDashboard = () => {
+    router.push(DASHBOARD);
+  };
 
   const onSubmit = async () => {
-    alert('설문이 완료되었습니다. 감사합니다.');
-    const answersArray = Object.keys(answers).map((key) => {
-      return {
+    try {
+      alert('설문이 완료되었습니다. 감사합니다.');
+
+      const answersArray = Object.keys(answers).map((key) => ({
         titleId: key,
         sum: answers[key].sum,
-      };
-    });
+      }));
+      await postSurvey(user.team, answersArray);
 
-    await postSurvey(user.team, answersArray);
-
-    clearAnswers();
-    router.push(DASHBOARD);
-    // try {
-    //   await fetch('/api/survey', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(answersArray),
-    //   });
-    // } catch (error) {
-    //   console.error('Error:', error);
-    // }
+      clearAnswers();
+      goToDashboard();
+    } catch (error) {
+      console.error('Survey submission error:', error);
+    }
   };
 
   const navigateHandler: NavigationButtonsProps = {
@@ -77,7 +73,7 @@ const QuestionsPage = () => {
   const navigateHandlerFirst: NavigationButtonsProps = {
     onNext: goToNextStep,
     onPrev: () => router.push(HOME),
-    disabled: true,
+    disabled: false,
   };
 
   const navigateHandlerLast: NavigationButtonsProps = {
@@ -85,8 +81,6 @@ const QuestionsPage = () => {
     onPrev: goToPrevStep,
     disabled: false,
   };
-
-  const { data } = getQuestions();
 
   return (
     <div className='p-4'>
@@ -99,7 +93,10 @@ const QuestionsPage = () => {
           <Question {...data[1]} {...navigateHandler} />
         </Step>
         <Step name={QUESTION_STEPS[2]}>
-          <Question {...data[2]} {...navigateHandlerLast} />
+          <Question {...data[2]} {...navigateHandler} />
+        </Step>
+        <Step name={QUESTION_STEPS[3]}>
+          <Question {...data[3]} {...navigateHandlerLast} />
         </Step>
       </Funnel>
     </div>
