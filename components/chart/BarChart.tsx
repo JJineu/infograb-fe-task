@@ -32,9 +32,7 @@ const BarChart = ({
     },
   ],
 }: {
-  data: {
-    [key: string]: number;
-  }[];
+  data: { [key: string]: number | string }[];
   colorsScheme?: string;
   legend?: any[];
 }) => (

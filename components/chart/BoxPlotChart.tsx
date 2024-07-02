@@ -2,15 +2,7 @@
 
 import { ResponsiveBoxPlot } from '@nivo/boxplot';
 
-const BoxPlotChart = ({
-  data,
-}: {
-  data: {
-    id: string;
-    group: string;
-    data: number[];
-  }[];
-}) => (
+const BoxPlotChart = ({ data }: { data: { group: string; n: number; value: number }[] }) => (
   <ResponsiveBoxPlot
     data={data}
     margin={{ top: 60, right: 140, bottom: 60, left: 60 }}

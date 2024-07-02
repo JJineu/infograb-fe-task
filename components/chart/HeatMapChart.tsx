@@ -21,7 +21,7 @@ const HeatMapChart = ({
   ],
   axiosY = 'question',
 }: {
-  data: { id: string; data: { x: string; y: string; value: number }[] }[];
+  data: { id: string; data: { x: string; y: number }[] }[];
   maxValue: number;
   annotation?: any[];
   axiosY?: string;
