@@ -9,7 +9,7 @@ export const setCookie = (name: string, value: string, days = 1) => {
 
 export const getCookie = (name: string) => {
   const nameEQ = `${name}=`;
-  const cookies = document.cookie ? document.cookie.split(';') : [];
+  const cookies = document?.cookie ? document.cookie.split(';') : [];
   for (const cookie of cookies) {
     const trimmedCookie = cookie.trim();
     if (trimmedCookie.startsWith(nameEQ)) {

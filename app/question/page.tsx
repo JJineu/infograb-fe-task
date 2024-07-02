@@ -8,20 +8,19 @@ import { ProgressBar, useProgress } from '@/components/progress';
 import type { NavigationButtonsProps } from '@/components/progress/NavigationButtons';
 import Question from '@/components/question/Question';
 import { DASHBOARD, HOME } from '@/constants/route-helper';
-import { getQuestions, postSurvey } from '@/data/services';
+import { getQuestions } from '@/data/services';
 import { useAnswersStore } from '@/store/zustand/questions';
-import { useUserStore } from '@/store/zustand/user';
+
+import { postSurveyQuery } from './services';
 
 const QuestionsPage = () => {
   const router = useRouter();
   const { data } = getQuestions();
-  const QUESTION_STEPS = data.map((question) => question.title.content);
+  const { answers, clearAnswers } = useAnswersStore();
 
+  const QUESTION_STEPS = data.map((question) => question.title.content);
   const { Funnel, Step, setStep } = useFunnel(QUESTION_STEPS[0]);
   const { currentStep, setCurrentStep, progress } = useProgress(QUESTION_STEPS);
-
-  const { answers, clearAnswers } = useAnswersStore();
-  const { user } = useUserStore();
 
   const goToNextStep = () => {
     const nextIndex = Math.min(QUESTION_STEPS.indexOf(currentStep) + 1, QUESTION_STEPS.length - 1);
@@ -47,21 +46,14 @@ const QuestionsPage = () => {
     router.push(DASHBOARD);
   };
 
-  const onSubmit = async () => {
-    try {
-      alert('설문이 완료되었습니다. 감사합니다.');
-
-      const answersArray = Object.keys(answers).map((key) => ({
-        titleId: key,
-        sum: answers[key].sum,
-      }));
-      await postSurvey(user.team, answersArray);
-
-      clearAnswers();
-      goToDashboard();
-    } catch (error) {
-      console.error('Survey submission error:', error);
-    }
+  const onSubmit = () => {
+    postSurveyQuery({
+      answers,
+      nextFunc: () => {
+        goToDashboard();
+        clearAnswers();
+      },
+    });
   };
 
   const navigateHandler: NavigationButtonsProps = {
