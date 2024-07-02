@@ -4,8 +4,9 @@ import { useRouter } from 'next/navigation';
 import type { ChangeEvent, FormEvent } from 'react';
 import React, { useEffect, useState } from 'react';
 
-import { getUserQuery, postUserQuery } from '@/app/services';
 import { QUESTION } from '@/constants/route-helper';
+
+import { getUserQuery, postUserQuery } from './services';
 
 const UserForm = () => {
   const router = useRouter();

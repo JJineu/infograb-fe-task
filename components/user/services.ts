@@ -21,3 +21,12 @@ export const getUserQuery = async () => {
     return { team: '', name: '' };
   }
 };
+
+export const clearUserQuery = async () => {
+  try {
+    setCookie('user_team', '');
+    setCookie('user_name', '');
+  } catch (error) {
+    console.error('User clear error:', error);
+  }
+};
